@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
+
+
+<div class="col-lg-5 col-md-7 col-sm-11 bg-white rounded shadow p-4">
+
+    <!-- TOP IMAGE -->
+    <div class="text-center mb-3">
+        <img src="{% static 'images/medical1.jpg' %}" 
+             alt="MediCore"
+             class="img-fluid rounded"
+             style="max-height: 150px;">
+    </div>
+
+    <!-- TITLE -->
+    <h3 class="text-center mb-3">
+        Create Your <span class="text-primary">MediCore</span> Account
+    </h3>
+
+    <!-- DJANGO MESSAGES -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- FORM -->
+    <form method="POST">
+    {% csrf_token %}
+
+        <input type="hidden" name="role" value="patient">
+
+        <!-- NAME -->
+        <div class="row">
+            <div class="col-md-6 mb-2">
+                <input type="text" name="first_name" class="form-control" placeholder="First Name" required>
+            </div>
+            <div class="col-md-6 mb-2">
+                <input type="text" name="last_name" class="form-control" placeholder="Last Name" required>
+            </div>
+        </div>
+
+        <!-- USERNAME -->
+        <div class="mb-2">
+            <input type="text" name="username" class="form-control" placeholder="Username" required>
+        </div>
+
+        <!-- EMAIL -->
+        <div class="mb-2">
+            <input type="email" name="email" class="form-control" placeholder="Email Address" required>
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="row">
+            <div class="col-md-6 mb-2">
+                <input type="password" name="password" class="form-control" placeholder="Password" required>
+            </div>
+            <div class="col-md-6 mb-2">
+                <input type="password" name="confirm_password" class="form-control" placeholder="Confirm Password" required>
+            </div>
+        </div>
+
+        <!-- DOB + GENDER -->
+        <div class="row">
+            <div class="col-md-6 mb-2">
+                <input type="date" name="dob" class="form-control" required>
+            </div>
+            <div class="col-md-6 mb-2">
+                <select name="gender" class="form-select" required>
+                    <option value="">Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- PHONE -->
+        <div class="mb-3">
+            <input type="text" name="phone" class="form-control" placeholder="Contact Number" required>
+        </div>
+
+        <!-- SUBMIT -->
+        <button type="submit" class="btn btn-primary w-100">
+            Register
+        </button>
+
+        <!-- LOGIN LINK -->
+        <p class="text-center mt-3 mb-0">
+            Already have an account? 
+            <a href="/login">Login</a>
+        </p>
+
+    </form>
+
+</div>
+
+
+</div>
+
+{% endblock %}

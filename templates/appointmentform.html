@@ -1,0 +1,538 @@
+{% extends "base.html" %}
+{% block title %}Book Appointment{% endblock %}
+
+{% block content %}
+
+<style>
+:root{
+    --primary-gradient: linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%);
+}
+
+/* ===== CONTAINER ===== */
+.container{
+    width: 100%;
+    max-width: 1320px;
+}
+
+/* ===== HEADER ===== */
+.booking-header{
+    background: var(--primary-gradient);
+    border-radius: 28px;
+    padding: 40px;
+    color: white;
+    margin-bottom: 35px;
+    position: relative;
+    overflow: hidden;
+}
+
+.booking-header::before{
+    content: "";
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+    top: -120px;
+    right: -90px;
+}
+
+.booking-header h2{
+    font-weight: 700;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 2;
+}
+
+.booking-header p{
+    margin: 0;
+    opacity: 0.9;
+    position: relative;
+    z-index: 2;
+}
+
+/* ===== CARD ===== */
+.doctor-card{
+    border: none;
+    border-radius: 26px;
+    overflow: hidden;
+    transition: 0.35s ease;
+    background: #fff;
+    height: 100%;
+}
+
+.doctor-card:hover{
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+
+/* ===== IMAGE ===== */
+.doctor-img{
+    width: 120px;
+    height: 120px;
+    min-width: 120px;
+    object-fit: cover;
+    border-radius: 22px;
+    border: 4px solid #f8fafc;
+}
+
+.doctor-placeholder{
+    width: 120px;
+    height: 120px;
+    min-width: 120px;
+    border-radius: 22px;
+    background: rgba(79,70,229,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.doctor-placeholder i{
+    color: #4f46e5;
+    font-size: 38px;
+}
+
+/* ===== INFO ===== */
+.doctor-name{
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #111827;
+}
+
+.speciality-badge{
+    background: rgba(79,70,229,0.1);
+    color: #4f46e5;
+    padding: 7px 14px;
+    border-radius: 50px;
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.doctor-info p{
+    margin-bottom: 8px;
+    color: #4b5563;
+    font-size: 15px;
+}
+
+.doctor-info i{
+    color: #4f46e5;
+    width: 20px;
+}
+
+/* ===== PRICE ===== */
+.price-box{
+    background: rgba(79,70,229,0.08);
+    border-radius: 16px;
+    padding: 10px 16px;
+    font-weight: 700;
+    color: #4f46e5;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+/* ===== BUTTON ===== */
+.book-btn{
+    border-radius: 50px;
+    padding: 11px 24px;
+    font-weight: 600;
+    background: var(--primary-gradient);
+    border: none;
+    transition: 0.3s ease;
+}
+
+.book-btn:hover{
+    transform: translateY(-2px);
+}
+
+/* ===== FORM ===== */
+.booking-form{
+    background: #f8fafc;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.form-label{
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #374151;
+}
+
+.form-control{
+    border-radius: 14px;
+    padding: 12px 14px;
+    border: 1px solid #e2e8f0;
+    box-shadow: none !important;
+}
+
+.form-control:focus{
+    border-color: #6366f1;
+}
+
+.pay-btn{
+    background: var(--primary-gradient);
+    border: none;
+    border-radius: 16px;
+    padding: 14px;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+.pay-btn:hover{
+    transform: translateY(-2px);
+}
+
+/* ===== RESPONSIVE ===== */
+
+/* TABLET */
+@media (max-width: 992px){
+
+    .booking-header{
+        padding: 30px 24px;
+    }
+
+    .doctor-name{
+        font-size: 20px;
+    }
+
+    .doctor-img,
+    .doctor-placeholder{
+        width: 100px;
+        height: 100px;
+        min-width: 100px;
+    }
+
+    .book-btn{
+        padding: 10px 18px;
+        font-size: 14px;
+    }
+}
+
+/* MOBILE */
+@media (max-width: 768px){
+
+    .container{
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .booking-header{
+        padding: 24px 18px;
+        border-radius: 20px;
+        margin-bottom: 24px;
+    }
+
+    .booking-header h2{
+        font-size: 24px;
+        line-height: 1.3;
+    }
+
+    .booking-header p{
+        font-size: 14px;
+    }
+
+    .doctor-card{
+        border-radius: 20px;
+    }
+
+    .doctor-top{
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+
+    .doctor-img,
+    .doctor-placeholder{
+        width: 90px;
+        height: 90px;
+        min-width: 90px;
+        margin-right: 0 !important;
+        margin-bottom: 16px;
+        border-radius: 18px;
+    }
+
+    .doctor-placeholder i{
+        font-size: 30px;
+    }
+
+    .doctor-name{
+        font-size: 18px;
+    }
+
+    .doctor-info p{
+        font-size: 14px;
+        margin-bottom: 6px;
+    }
+
+    .speciality-badge{
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    .price-box{
+        width: 100%;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    .book-btn{
+        width: 100%;
+        margin-top: 18px;
+        border-radius: 14px;
+    }
+
+    .booking-form{
+        padding: 16px;
+        border-radius: 16px;
+    }
+
+    .form-label{
+        font-size: 14px;
+    }
+
+    .form-control{
+        font-size: 14px;
+        padding: 11px 12px;
+    }
+
+    .pay-btn{
+        padding: 13px;
+        font-size: 15px;
+        border-radius: 14px;
+    }
+}
+
+/* SMALL MOBILE */
+@media (max-width: 480px){
+
+    .booking-header h2{
+        font-size: 21px;
+    }
+
+    .doctor-name{
+        font-size: 17px;
+    }
+
+    .doctor-info p{
+        font-size: 13px;
+    }
+
+    .price-box{
+        font-size: 13px;
+        padding: 10px;
+    }
+
+    .book-btn{
+        font-size: 14px;
+    }
+
+    .pay-btn{
+        font-size: 14px;
+    }
+}
+</style>
+
+<div class="container mt-4">
+
+    <!-- HEADER -->
+    <div class="booking-header shadow-lg">
+
+        <h2>
+            <i class="fas fa-calendar-check me-2"></i>
+            Book Appointment
+        </h2>
+
+        <p>
+            Find trusted doctors and schedule your consultation instantly
+        </p>
+
+    </div>
+
+    {% if error %}
+        <div class="alert alert-danger rounded-4 shadow-sm border-0">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    <div class="row">
+
+        {% for doctor in doctors %}
+
+        <div class="col-lg-6 mb-4">
+
+            <div class="card doctor-card shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <div class="d-flex justify-content-between align-items-start doctor-top">
+
+                        <div class="d-flex align-items-start flex-grow-1">
+
+                            {% if doctor.image %}
+
+                                <img src="{{ doctor.image.url }}" class="doctor-img me-3">
+
+                            {% else %}
+
+                                <div class="doctor-placeholder me-3">
+                                    <i class="fas fa-user-md"></i>
+                                </div>
+
+                            {% endif %}
+
+                            <div class="doctor-info">
+
+                                <h5 class="doctor-name">
+                                    Dr. {{ doctor.user.username }}
+                                </h5>
+
+                                <div class="speciality-badge">
+                                    {{ doctor.specialization }}
+                                </div>
+
+                                <p>
+                                    <i class="fas fa-briefcase me-1"></i>
+                                    {{ doctor.experience }}+ years experience
+                                </p>
+
+                                <p>
+                                    <i class="fas fa-language me-1"></i>
+                                    {{ doctor.languages }}
+                                </p>
+
+                                <div class="price-box">
+                                    ₹{{ doctor.fee }} Consultation Fee
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- SAME BACKEND -->
+                        <button class="btn btn-primary book-btn"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#form{{ doctor.id }}">
+
+                            <i class="fas fa-calendar-plus me-2"></i>
+                            Book
+
+                        </button>
+
+                    </div>
+
+                    <!-- FORM -->
+                    <div class="collapse mt-4" id="form{{ doctor.id }}">
+
+                        <div class="booking-form">
+
+                            <!-- hidden values -->
+                            <input type="hidden" class="doctor-id" value="{{ doctor.id }}">
+                            <input type="hidden" class="doctor-fee" value="{{ doctor.fee }}">
+
+                            <!-- inputs -->
+                            <div class="row">
+
+                                <div class="col-md-6 mb-3">
+
+                                    <label class="form-label">
+                                        Select Date
+                                    </label>
+
+                                    <input type="date"
+                                           class="form-control booking-date"
+                                           min="{{ today }}"
+                                           required>
+
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+
+                                    <label class="form-label">
+                                        Select Time
+                                    </label>
+
+                                    <input type="time"
+                                           class="form-control booking-time"
+                                           required>
+
+                                </div>
+
+                            </div>
+
+                            <!-- SAME BACKEND -->
+                            <button type="button"
+                                    id="checkoutBtn"
+                                    class="btn btn-primary w-100 pay-btn">
+
+                                <i class="fas fa-lock me-2"></i>
+                                Confirm Booking & Pay ₹{{ doctor.fee }}
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+document.querySelectorAll(".pay-btn").forEach(button => {
+
+    button.addEventListener("click", function () {
+
+        let container = this.closest(".collapse");
+
+        let doctorId = container.querySelector(".doctor-id").value;
+        let fee = parseInt(container.querySelector(".doctor-fee").value);
+        let date = container.querySelector(".booking-date").value;
+        let time = container.querySelector(".booking-time").value;
+
+        if (!date || !time) {
+            alert("Please select date and time");
+            return;
+        }
+
+        let amount = fee * 100;
+
+        var options = {
+            "key": "rzp_test_5uPzGreHV3wiCs",
+            "amount": amount,
+            "currency": "INR",
+            "name": "Doctor Appointment",
+
+            "handler": function (response) {
+
+                window.location.href =
+                    "/create/?doctor=" + doctorId +
+                    "&date=" + date +
+                    "&time=" + time +
+                    "&payment_id=" + response.razorpay_payment_id;
+
+            },
+
+            "theme": {
+                "color": "#4f46e5"
+            }
+        };
+
+        var rzp = new Razorpay(options);
+        rzp.open();
+
+    });
+
+});
+</script>
+
+{% endblock %}

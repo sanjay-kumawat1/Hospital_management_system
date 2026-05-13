@@ -1,0 +1,84 @@
+from django.shortcuts import render
+
+# Create your views here.
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+from patients.models import Patient
+from django.contrib.auth import authenticate, login,logout
+
+User = get_user_model()
+
+def register(request):
+    if request.method == "POST":
+        # --- Get form data ---
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+
+        dob = request.POST.get('dob')
+        gender = request.POST.get('gender')
+        phone = request.POST.get('phone')
+
+        # --- Validations ---
+        if password != confirm_password:
+            messages.error(request, "Passwords do not match")
+            return redirect('register')
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists")
+            return redirect('register')
+
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "Email already registered")
+            return redirect('register')
+
+        # --- Create User (force role = patient) ---
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password,
+            first_name=first_name,
+            last_name=last_name,
+            role='patient'  # 🔥 always enforced
+        )
+
+        # --- Create Patient Profile ---
+        Patient.objects.create(
+            user=user,
+            dob=dob,
+            gender=gender,
+            phone=phone
+        )
+
+        messages.success(request, "Registration successful! Please login.")
+        return redirect('login')
+
+    return render(request, 'register.html')
+
+
+def login_view(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        # Authenticate user
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            messages.success(request, "Login successful!")
+            return redirect("/dashboard")  # change to your page
+        else:
+            messages.error(request, "Invalid username or password")
+
+    return render(request, "login.html")
+
+
+def logout_view(request):
+    logout(request)
+    messages.success(request,'logout successfully!!')
+    return redirect("/login")

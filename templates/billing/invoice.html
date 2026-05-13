@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block title %}My Invoices{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <!-- HEADER -->
+    <div class="text-center mb-4">
+        <h2 class="fw-bold">💳 My Invoices</h2>
+        <p class="text-muted">View and manage your invoices</p>
+    </div>
+
+    {% if invoices %}
+
+    <div class="row g-4">
+
+        {% for invoice in invoices %}
+
+        {% if invoice.patient_name == request.user.username or request.user.is_staff %}
+
+        <!-- INVOICE CARD -->
+        <div class="col-md-6">
+
+            <div class="card shadow-sm border-0 p-4" id="invoice-{{ invoice.id }}">
+
+                <!-- HEADER -->
+                <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+                    <h5 class="fw-bold">Invoice #{{ invoice.id }}</h5>
+
+                    {% if invoice.status == 'paid' %}
+                        <span class="badge bg-success">Paid</span>
+                    {% elif invoice.status == 'pending' %}
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    {% elif invoice.status == 'overdue' %}
+                        <span class="badge bg-danger">Overdue</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Cancelled</span>
+                    {% endif %}
+                </div>
+
+                <!-- DETAILS -->
+                <p><strong>Patient:</strong> {{ invoice.patient_name }}</p>
+                <p><strong>Phone:</strong> {{ invoice.patient_phone }}</p>
+                <p><strong>Details:</strong> {{ invoice.appointment_details }}</p>
+                <p><strong>Due Date:</strong> {{ invoice.due_date|default:"-" }}</p>
+
+                <hr>
+
+                <!-- AMOUNT -->
+                <div class="text-end">
+                    <h3 class="fw-bold text-primary">₹{{ invoice.amount }}</h3>
+                </div>
+
+                <!-- ACTION BUTTONS -->
+                <div class="d-flex justify-content-between mt-3">
+
+                    <button class="btn btn-dark btn-sm"
+                            onclick="printInvoice({{ invoice.id }})">
+                        🖨️ Print
+                    </button>
+
+                    <button class="btn btn-primary btn-sm"
+                            onclick="downloadInvoice({{ invoice.id }})">
+                        ⬇️ Download
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="text-center p-5 bg-light rounded">
+        <h4>No invoices found</h4>
+    </div>
+
+    {% endif %}
+
+</div>
+
+<!-- ================= JS (WORKING FIX) ================= -->
+<script>
+
+// 🖨️ PRINT (WORKING 100%)
+function printInvoice(id) {
+
+    const element = document.getElementById('invoice-' + id);
+    if (!element) return;
+
+    const win = window.open('', '_blank', 'width=900,height=700');
+
+    win.document.write(`
+        <html>
+        <head>
+            <title>Invoice #${id}</title>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+            <style>
+                body { padding: 20px; background: #fff; }
+                button { display: none !important; }
+                .card { box-shadow: none !important; border: 1px solid #ddd !important; }
+            </style>
+        </head>
+        <body>
+            ${element.outerHTML}
+        </body>
+        </html>
+    `);
+
+    win.document.close();
+
+    win.onload = function () {
+        win.focus();
+        win.print();
+        win.close();
+    };
+}
+
+
+// ⬇️ DOWNLOAD (WORKING 100%)
+function downloadInvoice(id) {
+
+    const element = document.getElementById('invoice-' + id);
+    if (!element) return;
+
+    const html = `
+        <html>
+        <head>
+            <title>Invoice #${id}</title>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        </head>
+        <body style="padding:20px;">
+            ${element.outerHTML}
+        </body>
+        </html>
+    `;
+
+    const blob = new Blob([html], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "invoice_" + id + ".html";
+
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    URL.revokeObjectURL(url);
+}
+
+</script>
+
+{% endblock %}

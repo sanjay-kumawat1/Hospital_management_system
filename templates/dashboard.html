@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Patient Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold">Dashboard</h3>
+
+
+<!-- ➕ Always allow booking -->
+<a href="/create" class="btn btn-primary">
+    + Book Appointment
+</a>
+
+
+</div>
+
+<!-- 🧾 SUMMARY -->
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h6 class="text-muted">Total Appointments</h6>
+                <h3 class="fw-bold">{{ total_appointments }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 📅 CONDITIONAL UI -->
+
+{% if has_appointments %}
+
+
+<!-- ✅ SHOW TABLE -->
+<div class="card shadow-sm">
+    <div class="card-header bg-white fw-bold">
+        Recent Appointments
+    </div>
+
+    <div class="card-body p-0">
+        <table class="table mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Doctor</th>
+                    <th>Date & Time</th>
+                    <th>Status</th>
+                    <th>Action</th> <!-- ✅ NEW -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for appt in appointments %}
+                <tr>
+                    <td>{{ appt.doctor.user.username }}</td>
+                    <td>{{ appt.date_time }}</td>
+                    <td>
+                        {% if appt.status == 'booked' %}
+                            <span class="badge bg-primary">Booked</span>
+                        {% elif appt.status == 'completed' %}
+                            <span class="badge bg-success">Completed</span>
+                        {% else %}
+                            <span class="badge bg-danger">Cancelled</span>
+                        {% endif %}
+                    </td>
+
+                    <!-- ✅ CANCEL BUTTON -->
+                    <td>
+                        {% if appt.status == 'booked' %}
+                            <a href="{% url 'cancel_appointment' appt.id %}" 
+                               class="btn btn-sm btn-danger"
+                               onclick="return confirm('Are you sure you want to cancel this appointment?');">
+                               Cancel
+                            </a>
+                        {% else %}
+                            <span class="text-muted">-</span>
+                        {% endif %}
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+{% else %}
+
+
+<!-- ❌ EMPTY STATE -->
+<div class="card shadow-sm text-center py-5">
+    <div class="card-body">
+
+        <h4 class="mb-3">No Appointments Yet</h4>
+        <p class="text-muted">
+            You haven’t booked any appointments. Start by booking one.
+        </p>
+
+        <a href="/create" class="btn btn-primary">
+            Book Your First Appointment
+        </a>
+
+    </div>
+</div>
+
+
+{% endif %}
+
+{% endblock %}
